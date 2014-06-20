@@ -4,16 +4,17 @@ Discourse.AlertButton = Discourse.ButtonView.extend({
 
   click: function() {
     this.set('loading', true);
+    firstPost = this.get('controller.postStream.firstLoadedPost');
     Discourse.ajax("/create_profile_notes/add", {
       type: "POST",
       data: {
         topic_id: this.get('controller.content.id'),
-        target_id: this.get('controller.postStream.firstLoadedPost.user_id')
+        target_id: firstPost.user_id
       }
     }).then(function(){
       this.set('loading', false);
       this.set('text', 'Saved');
-      this.get('controller').send('goToUser', this.get('controller.postStream.firstLoadedPost.username'));
+      this.get('controller').send('goToUser', firstPost.username);
     }.bind(this));
   },
 
