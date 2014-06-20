@@ -6,7 +6,10 @@ Discourse.AlertButton = Discourse.ButtonView.extend({
     this.set('loading', true);
     Discourse.ajax("/create_profile_notes/add", {
       type: "POST",
-      data: {topic_id: this.get('controller.content.id')}
+      data: {
+        topic_id: this.get('controller.content.id'),
+        target_id: this.get('controller.postStream.firstLoadedPost.user_id')
+      }
     }).then(function(){
       this.set('loading', false);
       this.set('text', 'Saved');

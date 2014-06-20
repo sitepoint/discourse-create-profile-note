@@ -21,7 +21,7 @@ after_initialize do
 
         topic = ::Topic.where(id: params[:topic_id], archetype: :private_message).first
 
-        if topic.nil?
+        if topic.nil? || target.nil?
           render_forbidden
           return
         end
@@ -40,8 +40,12 @@ after_initialize do
         render_forbidden if !current_user.staff?
       end
 
+      def target
+        @_target ||= User.find(params[:target_id])
+      end
+
       def notes
-        @_notes ||= ProfileNotesPlugin::ProfileNotes.new(current_user, current_user)
+        @_notes ||= ProfileNotesPlugin::ProfileNotes.new(target, current_user)
       end
     end
   end
