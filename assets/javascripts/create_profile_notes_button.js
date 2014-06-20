@@ -13,7 +13,7 @@ Discourse.AlertButton = Discourse.ButtonView.extend({
     }).then(function(){
       this.set('loading', false);
       this.set('text', 'Saved');
-      this.rerender();
+      this.get('controller').send('goToUser', this.get('controller.postStream.firstLoadedPost.username'));
     }.bind(this));
   },
 
@@ -21,6 +21,15 @@ Discourse.AlertButton = Discourse.ButtonView.extend({
     buffer.push("<i class='fa fa-comment'></i>");
   }
 });
+
+Discourse.TopicController.reopen({
+  actions: {
+    goToUser: function(username) {
+      Discourse.URL.routeTo("/users/" + username);
+      return false;
+    }
+  }
+})
 
 Discourse.TopicFooterButtonsView.reopen({
   addAlertButton: function() {
