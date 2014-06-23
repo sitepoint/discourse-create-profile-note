@@ -4,17 +4,22 @@ Discourse.AlertButton = Discourse.ButtonView.extend({
 
   click: function() {
     this.set('loading', true);
-    firstPost = this.get('controller.postStream.firstLoadedPost');
+    controller = this.get('controller');
+    postStream = controller.get('postStream');
     Discourse.ajax("/create_profile_notes/add", {
       type: "POST",
       data: {
-        topic_id: this.get('controller.content.id'),
-        target_id: firstPost.user_id
+        topic_id: controller.get('content.id')
       }
     }).then(function(){
       this.set('loading', false);
       this.set('text', 'Saved');
-      this.get('controller').send('goToUser', firstPost.username);
+      postStream.get('topic.details.allowed_users').every(function(user){
+        if (user.username != controller.get('currentUser.username')) {
+          controller.send('goToUser', user.username);
+          return false;
+        }
+      });
     }.bind(this));
   },
 

@@ -19,14 +19,15 @@ after_initialize do
           return
         end
 
-        topic = ::Topic.where(id: params[:topic_id], archetype: :private_message).first
-
-        if topic.nil? || target.nil?
+        if topic.nil?
           render_forbidden
           return
         end
 
-        notes.add_note(topic.posts.first.raw, true, {topic_id: params[:topic_id]})
+        topic.allowed_users.where.not(users: { id: 19 }).each do |user|
+          notes(user).add_note(topic.posts.first.raw, true, {topic_id: params[:topic_id]})
+        end
+
         render status: :ok, json: false
       end
 
@@ -40,12 +41,12 @@ after_initialize do
         render_forbidden if !current_user.staff?
       end
 
-      def target
-        @_target ||= User.find(params[:target_id])
+      def topic
+        @_topic ||= Topic.where(id: params[:topic_id], archetype: :private_message).first
       end
 
-      def notes
-        @_notes ||= ProfileNotesPlugin::ProfileNotes.new(target, current_user)
+      def notes target
+        ProfileNotesPlugin::ProfileNotes.new(target, current_user)
       end
     end
   end
