@@ -26,7 +26,7 @@ after_initialize do
           return
         end
 
-        notes.add_note(topic.posts.first.raw, false, {topic_id: params[:topic_id]})
+        notes.add_note(topic.posts.first.raw, true, {topic_id: params[:topic_id]})
         render status: :ok, json: false
       end
 
