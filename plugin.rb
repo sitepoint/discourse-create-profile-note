@@ -24,7 +24,7 @@ after_initialize do
           return
         end
 
-        topic.allowed_users.where.not(users: { id: 19 }).each do |user|
+        topic.allowed_users.where.not(users: { id: current_user.id }).each do |user|
           notes(user).add_note(topic.posts.first.raw, true, {topic_id: params[:topic_id]})
         end
 
