@@ -5,7 +5,7 @@ Discourse.AlertButton = Discourse.ButtonView.extend({
   click: function() {
     this.set('loading', true);
     controller = this.get('controller');
-    postStream = controller.get('postStream');
+    postStream = controller.get('model.postStream');
     Discourse.ajax("/create_profile_notes/add", {
       type: "POST",
       data: {
