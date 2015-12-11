@@ -59,6 +59,3 @@ after_initialize do
     mount ::CreateProfileNotesPlugin::Engine, at: '/create_profile_notes'
   end
 end
-
-# Register UI Components
-register_asset "javascripts/create_profile_notes_button.js"
